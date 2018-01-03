@@ -86,7 +86,7 @@
 	      
 			  return w1;
 	}
-	//页面一加载就判断当前是否已登录，根据登录的身份正确显示个人信息框
+	//页面一加载就判断当前是否已登录，根据登录的身份正确显示个人信息框，有些页面不登录不给跳转
 	function showBox(){
 		$.ajax({
 			url : 'checklogin',
@@ -113,13 +113,49 @@
 						divlogin.append(text).append(href).attr("href","teacher/index").append("| ").append(logout_a);
 						//显示个人信息
 						$(box).prepend(div_clear).prepend(showTeacherLoginBox(data));
-					}
+					}					
 				}else{
 					window.location.href="index.html";
 				}
 			}
 		});
 	}
+	
+	
+	//页面一加载就判断当前是否已登录，根据登录的身份正确显示个人信息框，有些页面不登录给跳转
+	function showBox1(){
+		$.ajax({
+			url : 'checklogin',
+			type : 'post',
+			dataType : "json",
+			success:function(data){
+				if(data.code==100){
+					var divlogin=$("#Header1_divLogout");
+					var text="您好！欢迎来到阳光家教网！";
+					var href=$("<a></a>").text("个人中心");
+					var logout_a=$("<a></a>").attr("href","").addClass("logout").text(" 退出");
+					var box= $(".right4");
+					var div_clear=$("<div></div>").addClass("clear10");
+					if(data.map.type==1){
+						//显示左上角信息
+						divlogin.empty();
+						divlogin.append(text).append(href).attr("href","student/index").append("| ").append(logout_a);
+						//显示个人信息
+						$(box).prepend(div_clear).prepend(showStudentLoginBox(data));
+						
+					}else{
+						//显示左上角信息
+						divlogin.empty();
+						divlogin.append(text).append(href).attr("href","teacher/index").append("| ").append(logout_a);
+						//显示个人信息
+						$(box).prepend(div_clear).prepend(showTeacherLoginBox(data));
+					}					
+				}
+			}
+		});
+	}
+	
+	
 	//退出
 	$(document).on("click",".logout",function(){
 		$.ajax({
